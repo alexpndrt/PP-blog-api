@@ -30,11 +30,15 @@ export const login = async (req, res, next) => {
     const { username, password } = req.body;
     const user = await User.findOne({ where: { username } });
 
-    if (!user || user.password !== password) {
+    if (!user) {
       return res.status(401).json({ error: "Identifiants invalides" });
     }
 
     const valid = await argon2.verify(user.password, password);
+
+    if (!valid) {
+      return res.status(401).json({ error: "Identifiants invalides" });
+    }
 
     const token = jwt.sign(
       { id: user.id, username: user.username, role: user.role },
