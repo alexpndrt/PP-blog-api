@@ -3,7 +3,7 @@
 import { DataTypes } from "sequelize";
 import { sequelize } from "../config/database.js";
 
-// Définition du modèle User (table "users")
+// Modèle User avec clé étrangère roleId conforme à la base SQL
 export const User = sequelize.define(
   "User",
   {
@@ -21,14 +21,18 @@ export const User = sequelize.define(
       type: DataTypes.STRING,
       allowNull: false,
     },
-    role: {
-      type: DataTypes.ENUM("admin", "user"),
+    roleId: {
+      type: DataTypes.INTEGER,
       allowNull: false,
-      defaultValue: "user",
+      field: "roleId",
+      references: {
+        model: "roles",
+        key: "id",
+      },
     },
   },
   {
     tableName: "users",
-    timestamps: true, // Active createdAt et updatedAt automatiquement
+    timestamps: true,
   }
 );

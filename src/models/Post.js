@@ -3,7 +3,7 @@
 import { DataTypes } from "sequelize";
 import { sequelize } from "../config/database.js";
 
-// Définition du modèle Post (table "posts")
+// Modèle Post avec clé étrangère userId conforme à la base SQL
 export const Post = sequelize.define(
   "Post",
   {
@@ -20,9 +20,18 @@ export const Post = sequelize.define(
       type: DataTypes.TEXT,
       allowNull: false,
     },
+    userId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      field: "userId",
+      references: {
+        model: "users",
+        key: "id",
+      },
+    },
   },
   {
     tableName: "posts",
-    timestamps: true, // Active createdAt et updatedAt automatiquement
+    timestamps: true,
   }
 );

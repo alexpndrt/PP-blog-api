@@ -31,7 +31,11 @@ export const getPostById = async (req, res, next) => {
 export const createPost = async (req, res, next) => {
   try {
     const { title, content } = req.body;
-    const newPost = await Post.create({ title, content });
+    const newPost = await Post.create({
+      title,
+      content,
+      userId: req.user.id, // 🔑 Associe le post à l'utilisateur connecté
+    });
     res.status(201).json(newPost);
   } catch (err) {
     next(err);
