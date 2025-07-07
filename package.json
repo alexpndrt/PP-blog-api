@@ -4,8 +4,8 @@
   "description": "Projet : API Blog avec Node.js, Express, PostgreSQL",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
-    "dev": "nodemon index.js",
+    "start": "node dist/index.js",
+    "dev": "nodemon",
     "build": "tsc"
   },
   "keywords": [],
