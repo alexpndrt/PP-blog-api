@@ -1,7 +1,7 @@
 // src/models/Post.js
 
 import { DataTypes } from "sequelize";
-import { sequelize } from "./index.js";
+import { sequelize } from "../config/database.js";
 
 // Définition du modèle Post (table "posts")
 export const Post = sequelize.define(

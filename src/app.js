@@ -2,8 +2,8 @@
 
 import express from "express";
 import cors from "cors";
-import { errorHandler } from "./src/middlewares/index.js";
-import routes from "./src/routes/index.js";
+import { errorHandler } from "./middlewares/index.js";
+import routes from "./routes/index.js";
 
 // Initialisation de l'application Express
 const app = express();
