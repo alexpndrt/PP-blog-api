@@ -1,0 +1,25 @@
+import express from "express";
+import dotenv from "dotenv";
+import { sequelize } from "./src/config/database.js";
+import postRoutes from "./src/routes/postRoutes.js";
+
+dotenv.config();
+
+const app = express();
+const PORT = process.env.PORT || 3000;
+
+app.use(express.json());
+app.use("/api/posts", postRoutes); // ✅ On utilise bien le Router complet ici
+
+app.get("/", (req, res) => {
+  res.send("Bienvenue sur l'API Blog 🚀");
+});
+
+sequelize
+  .sync()
+  .then(() => console.log("✅ Base de données synchronisée"))
+  .catch((error) => console.error("❌ Erreur de synchronisation:", error));
+
+app.listen(PORT, () => {
+  console.log(`Serveur démarré sur http://localhost:${PORT}`);
+});
