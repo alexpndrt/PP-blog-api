@@ -1,4 +1,8 @@
+import jwt from 'jsonwebtoken';
+
 import { User } from "../models/User.js";
+
+
 
 export const register = async (req, res, next) => {
   try {
@@ -14,6 +18,28 @@ export const register = async (req, res, next) => {
           role: newUser.role,
         },
       });
+  } catch (err) {
+    next(err);
+  }
+};
+
+
+export const login = async (req, res, next) => {
+  try {
+    const { username, password } = req.body;
+    const user = await User.findOne({ where: { username } });
+
+    if (!user || user.password !== password) {
+      return res.status(401).json({ error: 'Identifiants invalides' });
+    }
+
+    const token = jwt.sign(
+      { id: user.id, username: user.username, role: user.role },
+      process.env.JWT_SECRET,
+      { expiresIn: '2h' }
+    );
+
+    res.json({ token });
   } catch (err) {
     next(err);
   }
