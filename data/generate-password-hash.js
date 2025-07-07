@@ -6,6 +6,8 @@ const generateHash = async (password) => {
   console.log(`Hash : ${hash}`);
 };
 
-await generateHash('admin123');
-await generateHash('user123');
-await generateHash('password');
+await generateHash('admin');
+await generateHash('user');
+await generateHash('user1');
+await generateHash('user2');
+await generateHash('user3');
