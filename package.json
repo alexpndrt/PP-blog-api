@@ -6,7 +6,10 @@
   "scripts": {
     "start": "node dist/index.js",
     "dev": "nodemon",
-    "build": "tsc"
+    "build": "tsc",
+    "reset-db": "psql -U postgres -d postgres -c \"DROP DATABASE IF EXISTS blogapi;\" && psql -U postgres -d postgres -c \"CREATE DATABASE blogapi;\"",
+    "seed-db": "psql -U blogapi -d blogapi -f data/init-dev-db.sql",
+    "reset-and-seed": "npm run reset-db && npm run seed-db"
   },
   "keywords": [],
   "author": "",
