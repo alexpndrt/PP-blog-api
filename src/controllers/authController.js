@@ -7,7 +7,7 @@ import { User } from "../models/index.js";
 // Contrôleur pour l'inscription d'un utilisateur
 export const register = async (req, res, next) => {
   try {
-    console.log("BODY:", req.body);
+    // console.log("BODY:", req.body);
     const { username, password, roleId } = req.body;
 
     // Hachage sécurisé du mot de passe avec Argon2
@@ -19,7 +19,7 @@ export const register = async (req, res, next) => {
       password: hashedPassword,
       roleId: roleId,
     });
-    console.log("roleId:", roleId);
+    // console.log("roleId:", roleId);
 
     res.status(201).json({
       message: "Utilisateur créé",
