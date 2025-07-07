@@ -1,6 +1,9 @@
-import { DataTypes } from "sequelize";
-import { sequelize } from "../config/database.js";
+// src/models/User.js
 
+import { DataTypes } from "sequelize";
+import { sequelize } from "./index.js";
+
+// Définition du modèle User (table "users")
 export const User = sequelize.define(
   "User",
   {
@@ -26,6 +29,6 @@ export const User = sequelize.define(
   },
   {
     tableName: "users",
-    timestamps: true,
+    timestamps: true, // Active createdAt et updatedAt automatiquement
   }
 );
