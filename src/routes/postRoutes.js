@@ -1,3 +1,5 @@
+// src/routes/postRoutes.js
+
 import { Router } from "express";
 import {
   getAllPosts,
@@ -5,20 +7,22 @@ import {
   createPost,
   updatePost,
   deletePost,
-} from "../controllers/postController.js";
+} from "../controllers/index.js";
 import {
   authenticateToken,
   authorizeRoles,
-} from "../middlewares/authMiddleware.js";
-import { validatePost } from "../middlewares/postValidator.js"; // ✅ On réimporte la validation
+  validatePost,
+} from "../middlewares/index.js";
 
 const router = Router();
 
-// 🔓 Lire les posts ➔ Authentification simple
+// Route pour récupérer tous les articles (authentification requise)
 router.get("/", authenticateToken, getAllPosts);
+
+// Route pour récupérer un article par ID (authentification requise)
 router.get("/:id", authenticateToken, getPostById);
 
-// 🔐 Créer, modifier, supprimer ➔ Auth + Rôle admin + Validation des entrées
+// Route pour créer un nouvel article (admin uniquement + validation des données)
 router.post(
   "/",
   authenticateToken,
@@ -26,6 +30,8 @@ router.post(
   validatePost,
   createPost
 );
+
+// Route pour mettre à jour un article existant (admin uniquement + validation des données)
 router.put(
   "/:id",
   authenticateToken,
@@ -33,6 +39,8 @@ router.put(
   validatePost,
   updatePost
 );
+
+// Route pour supprimer un article (admin uniquement)
 router.delete("/:id", authenticateToken, authorizeRoles("admin"), deletePost);
 
 export default router;

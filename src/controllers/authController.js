@@ -1,17 +1,24 @@
+// src/controllers/authController.js
+
 import jwt from "jsonwebtoken";
 import argon2 from "argon2";
+import { User } from "../models/index.js";
 
-import { User } from "../models/User.js";
-
+// Contrôleur pour l'inscription d'un utilisateur
 export const register = async (req, res, next) => {
   try {
     const { username, password, role } = req.body;
+
+    // Hachage sécurisé du mot de passe avec Argon2
     const hashedPassword = await argon2.hash(password);
+
+    // Création du nouvel utilisateur
     const newUser = await User.create({
       username,
       password: hashedPassword,
       role,
     });
+
     res.status(201).json({
       message: "Utilisateur créé",
       user: {
@@ -25,21 +32,26 @@ export const register = async (req, res, next) => {
   }
 };
 
+// Contrôleur pour la connexion d'un utilisateur
 export const login = async (req, res, next) => {
   try {
     const { username, password } = req.body;
+
+    // Recherche de l'utilisateur en base
     const user = await User.findOne({ where: { username } });
 
     if (!user) {
       return res.status(401).json({ error: "Identifiants invalides" });
     }
 
+    // Vérification du mot de passe avec Argon2
     const valid = await argon2.verify(user.password, password);
 
     if (!valid) {
       return res.status(401).json({ error: "Identifiants invalides" });
     }
 
+    // Génération d'un token JWT sécurisé
     const token = jwt.sign(
       { id: user.id, username: user.username, role: user.role },
       process.env.JWT_SECRET,

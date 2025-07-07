@@ -1,6 +1,9 @@
+// src/models/Post.js
+
 import { DataTypes } from "sequelize";
 import { sequelize } from "../config/database.js";
 
+// Définition du modèle Post (table "posts")
 export const Post = sequelize.define(
   "Post",
   {
@@ -19,7 +22,7 @@ export const Post = sequelize.define(
     },
   },
   {
-    tableName: "posts", // optionnel : nom de la table
-    timestamps: true, // active createdAt / updatedAt
+    tableName: "posts",
+    timestamps: true, // Active createdAt et updatedAt automatiquement
   }
 );

@@ -1,31 +1,25 @@
-import express from "express";
-import dotenv from "dotenv";
-import { sequelize } from "./src/config/database.js";
-import postRoutes from "./src/routes/postRoutes.js";
-import { errorHandler } from "./src/middlewares/errorHandler.js";
-import authRoutes from './src/routes/authRoutes.js';
+// index.js (à la racine du projet)
 
+import app from './src/app.js';
+import { sequelize } from './src/models/index.js';
+import dotenv from 'dotenv';
+
+// Chargement des variables d'environnement depuis le fichier .env
 dotenv.config();
 
-const app = express();
+// Définition du port (par défaut 3000 si non défini dans .env)
 const PORT = process.env.PORT || 3000;
 
-app.use(express.json());
+// Synchronisation des modèles Sequelize avec la base de données
+sequelize.sync()
+  .then(() => {
+    console.log('✅ Base de données synchronisée');
 
-app.use(errorHandler);
-
-app.use('/api', authRoutes);
-app.use("/api/posts", postRoutes);
-
-app.get("/", (req, res) => {
-  res.send("Bienvenue sur l'API Blog 🚀");
-});
-
-sequelize
-  .sync()
-  .then(() => console.log("✅ Base de données synchronisée"))
-  .catch((error) => console.error("❌ Erreur de synchronisation:", error));
-
-app.listen(PORT, () => {
-  console.log(`Serveur démarré sur http://localhost:${PORT}`);
-});
+    // Démarrage du serveur Express après synchronisation
+    app.listen(PORT, () => {
+      console.log(`✅ Serveur démarré sur http://localhost:${PORT}`);
+    });
+  })
+  .catch((error) => {
+    console.error('❌ Erreur de synchronisation avec la base de données :', error);
+  });
