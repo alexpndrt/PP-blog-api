@@ -34,6 +34,8 @@ export const login = async (req, res, next) => {
       return res.status(401).json({ error: "Identifiants invalides" });
     }
 
+    const valid = await argon2.verify(user.password, password);
+
     const token = jwt.sign(
       { id: user.id, username: user.username, role: user.role },
       process.env.JWT_SECRET,
