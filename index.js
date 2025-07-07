@@ -9,7 +9,7 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 app.use(express.json());
-app.use("/api/posts", postRoutes); // ✅ On utilise bien le Router complet ici
+app.use("/api/posts", postRoutes);
 
 app.get("/", (req, res) => {
   res.send("Bienvenue sur l'API Blog 🚀");
