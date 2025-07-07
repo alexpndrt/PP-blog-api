@@ -10,6 +10,15 @@ export const register = async (req, res, next) => {
     // console.log("BODY:", req.body);
     const { username, password, roleId } = req.body;
 
+    if (!username || !password || !roleId) {
+      return res.status(400).json({ error: "Champs manquants" });
+    }
+
+    const existingUser = await User.findOne({ where: { username } });
+
+    if (existingUser) {
+      return res.status(400).json({ error: "Nom d'utilisateur déjà pris" });
+    }
     // Hachage sécurisé du mot de passe avec Argon2
     const hashedPassword = await argon2.hash(password);
 
