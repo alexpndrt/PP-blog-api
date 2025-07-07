@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import { sequelize } from "./src/config/database.js";
 import postRoutes from "./src/routes/postRoutes.js";
 import { errorHandler } from "./src/middlewares/errorHandler.js";
+import authRoutes from './src/routes/authRoutes.js';
 
 dotenv.config();
 
@@ -13,6 +14,7 @@ app.use(express.json());
 
 app.use(errorHandler);
 
+app.use('/api', authRoutes);
 app.use("/api/posts", postRoutes);
 
 app.get("/", (req, res) => {
