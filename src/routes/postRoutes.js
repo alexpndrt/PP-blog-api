@@ -26,7 +26,7 @@ router.get("/:id", authenticateToken, getPostById);
 router.post(
   "/",
   authenticateToken,
-  authorizeRoles("admin"),
+  authorizeRoles(1), // 1 correspond au rôle admin
   validatePost,
   createPost
 );
@@ -35,12 +35,12 @@ router.post(
 router.put(
   "/:id",
   authenticateToken,
-  authorizeRoles("admin"),
+  authorizeRoles(1), // 1 correspond au rôle admin
   validatePost,
   updatePost
 );
 
 // Route pour supprimer un article (admin uniquement)
-router.delete("/:id", authenticateToken, authorizeRoles("admin"), deletePost);
+router.delete("/:id", authenticateToken, authorizeRoles(1), deletePost);
 
 export default router;

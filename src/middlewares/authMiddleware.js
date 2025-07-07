@@ -26,7 +26,7 @@ export const authenticateToken = (req, res, next) => {
 // Middleware pour vérifier le rôle de l'utilisateur
 export const authorizeRoles = (...roles) => {
   return (req, res, next) => {
-    if (!req.user || !roles.includes(req.user.role)) {
+    if (!req.user || !roles.includes(req.user.roleId)) {
       return res
         .status(403)
         .json({ error: "Accès interdit : rôle insuffisant" });

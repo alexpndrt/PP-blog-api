@@ -79,7 +79,7 @@ test("should fail to register with non-existing role", async () => {
 test("should login successfully with valid credentials", async () => {
   const response = await request(app).post("/api/login").send({
     username: "admin",
-    password: "admin123",
+    password: "admin",
   });
 
   assert.strictEqual(response.statusCode, 200);

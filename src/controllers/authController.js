@@ -49,6 +49,7 @@ export const register = async (req, res, next) => {
       },
     });
   } catch (err) {
+    // console.error("❌ Erreur dans register:", err);
     next(err);
   }
 };
@@ -68,6 +69,7 @@ export const login = async (req, res, next) => {
 
     // Recherche de l'utilisateur en base
     const user = await User.findOne({ where: { username } });
+    // console.log("🔑 User trouvé:", user);
 
     if (!user) {
       return res.status(401).json({ error: "Identifiants invalides" });
@@ -75,6 +77,7 @@ export const login = async (req, res, next) => {
 
     // Vérification du mot de passe avec Argon2
     const valid = await argon2.verify(user.password, password);
+    // console.log("🔑 Password valide ?", valid);
 
     if (!valid) {
       return res.status(401).json({ error: "Identifiants invalides" });
@@ -90,6 +93,7 @@ export const login = async (req, res, next) => {
     // Retourne le token au client
     res.json({ token });
   } catch (err) {
+    // console.error("❌ Erreur dans login:", err);
     next(err);
   }
 };
