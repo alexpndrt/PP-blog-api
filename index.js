@@ -2,7 +2,7 @@ import express from "express";
 import dotenv from "dotenv";
 import { sequelize } from "./src/config/database.js";
 import postRoutes from "./src/routes/postRoutes.js";
-import { errorHandler } from "./middlewares/errorHandler.js";
+import { errorHandler } from "./src/middlewares/errorHandler.js";
 
 dotenv.config();
 
