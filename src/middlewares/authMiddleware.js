@@ -19,7 +19,7 @@ export const authenticateToken = (req, res, next) => {
     req.user = user; // Stocke l'utilisateur décodé dans la requête
     next();
   } catch (err) {
-    res.status(403).json({ error: "Token invalide ou expiré" });
+    return res.status(401).json({ error: "Token invalide ou expiré" });
   }
 };
 
