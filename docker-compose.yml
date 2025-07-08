@@ -1,0 +1,40 @@
+version: "3.8" # Version de la syntaxe docker-compose (fiable et stable)
+
+services:
+  database:
+    image: postgres:15 # Utilise l'image officielle de Postgres version 15
+    #récupères une image officielle sécurisée de PostgreSQL depuis Docker Hub
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+    ports:
+      - "5432:5432"
+      #Expose le port 5432 du container sur ton localhost:5432 ➔ pour pouvoir s'y connecter depuis un PgAdmin ou ton app locale.
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      # Volume persistant ➔ si tu arrêtes le container, les données restent stockées sur ton disque (important pour ne pas tout perdre).
+
+  #Service api (Mon projet Node.js)
+  api:
+    build: . # Docker va lire le Dockerfile qui est à la racine
+    ports:
+      - "${PORT}:${PORT}" # Le port 3000 de l’API sera exposé sur le port 3000 de ma machine ➔ http://localhost:3000
+    environment:
+      - PORT=${PORT}
+      - DB_HOST=${DB_HOST} # Ici 'database' = nom du service Postgres (Docker le résout automatiquement)
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_NAME=${DB_NAME}
+      - DB_PORT=${DB_PORT}
+      - JWT_SECRET=${JWT_SECRET}
+    depends_on:
+      - database
+      # Permet de dire à Docker : « ne lance pas ce service tant que la base n’est pas démarrée ».
+    volumes:
+      - .:/app # Monte ton dossier projet dans le container (code live)
+      - /app/node_modules # Pour éviter d’écraser les node_modules internes au container
+
+volumes:
+  postgres_data:
+  #Crée un volume Docker nommé postgres_data ➔ il stocke les données PostgreSQL même si le container est supprimé.
