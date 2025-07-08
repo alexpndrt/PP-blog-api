@@ -190,7 +190,62 @@ Tests réalisés :
 
 Ce projet est prévu pour être déployé dans un environnement type **Docker** ou sur un PaaS comme **Heroku**, **Render** ou **Railway**.
 
-Prochaine étape envisagée : création d'un fichier **docker-compose.yml** pour faciliter le déploiement multi-environnement.
+### 🐳 Déploiement avec Docker (Pro)
+
+### 1️⃣ Prérequis
+
+* Avoir **Docker** et **Docker Compose** installés sur votre machine.
+
+### 2️⃣ Variables d'environnement (sécurisées)
+
+Créez un fichier `.env` à la racine du projet (non versionné) :
+
+```env
+PORT=3000
+DB_NAME=blogapi
+DB_USER=blogapi
+DB_PASSWORD=blogapi
+DB_HOST=database
+DB_PORT=5432
+JWT_SECRET=supersecret
+```
+
+Ces variables sont externalisées et ne doivent **jamais être partagées sur GitHub**. Un fichier `.env.example` peut être fourni pour indiquer les clés attendues sans les valeurs réelles.
+
+### 3️⃣ Lancer les containers
+
+```bash
+docker-compose --env-file .env up --build
+```
+
+Cela démarre :
+
+* Un container pour la base PostgreSQL.
+* Un container pour l'API Node.js.
+
+L’API sera accessible sur :
+
+```
+http://localhost:3000/api
+```
+
+La documentation Swagger sera accessible sur :
+
+```
+http://localhost:3000/api-docs
+```
+
+### 4️⃣ Arrêter les containers
+
+```bash
+docker-compose down
+```
+
+### 5️⃣ Points forts de la dockerisation
+
+* 🔐 **Sécurité** ➔ Pas de secrets dans le code.
+* 🌍 **Portabilité** ➔ Fonctionne sur toutes les machines.
+* 💾 **Persistance des données** ➔ La base PostgreSQL utilise un volume Docker (`postgres_data`).
 
 ---
 
