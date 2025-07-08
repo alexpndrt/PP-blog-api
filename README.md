@@ -4,11 +4,11 @@
 
 Ce projet a été réalisé dans le cadre de ma formation au Titre Professionnel **Concepteur Développeur d'Applications (CDA)** avec pour objectif de :
 
-* Consolider mes compétences en développement backend.
-* Maîtriser la création d'une API REST sécurisée avec **Node.js**, **Express** et **PostgreSQL**.
-* Mettre en place une authentification sécurisée et une gestion des droits d'accès.
-* Apprendre à documenter et à tester correctement une API.
-* Préparer le projet à un déploiement professionnel.
+- Consolider mes compétences en développement backend.
+- Maîtriser la création d'une API REST sécurisée avec **Node.js**, **Express** et **PostgreSQL**.
+- Mettre en place une authentification sécurisée et une gestion des droits d'accès.
+- Apprendre à documenter et à tester correctement une API.
+- Préparer le projet à un déploiement professionnel.
 
 Il s'agit d'un projet d'entraînement personnel visant à m'améliorer et à appliquer les bonnes pratiques vues en formation.
 
@@ -16,15 +16,15 @@ Il s'agit d'un projet d'entraînement personnel visant à m'améliorer et à app
 
 ## ⚙️ Technologies utilisées
 
-* **Node.js** (version ESModules)
-* **Express.js**
-* **Sequelize** (ORM)
-* **PostgreSQL**
-* **argon2** pour le hashage des mots de passe
-* **jsonwebtoken (JWT)** pour l'authentification
-* **express-validator** pour la validation des données
-* **Swagger (swagger-jsdoc + swagger-ui-express)** pour la documentation
-* **Assert (Node.js)** pour les tests
+- **Node.js** (version ESModules)
+- **Express.js**
+- **Sequelize** (ORM)
+- **PostgreSQL**
+- **argon2** pour le hashage des mots de passe
+- **jsonwebtoken (JWT)** pour l'authentification
+- **express-validator** pour la validation des données
+- **Swagger (swagger-jsdoc + swagger-ui-express)** pour la documentation
+- **Assert (Node.js)** pour les tests
 
 ---
 
@@ -32,10 +32,10 @@ Il s'agit d'un projet d'entraînement personnel visant à m'améliorer et à app
 
 Le projet suit une architecture de type **MVC (Modèle - Vue - Contrôleur)** adaptée aux API REST :
 
-* **Models** : Définis avec Sequelize, représentent les entités (User, Role, Post).
-* **Controllers** : Contiennent la logique métier (authentification, gestion des articles).
-* **Routes** : Gèrent les points d'entrée de l'application.
-* **Middlewares** : Sécurisent et valident les requêtes.
+- **Models** : Définis avec Sequelize, représentent les entités (User, Role, Post).
+- **Controllers** : Contiennent la logique métier (authentification, gestion des articles).
+- **Routes** : Gèrent les points d'entrée de l'application.
+- **Middlewares** : Sécurisent et valident les requêtes.
 
 Cette structure assure une séparation claire des responsabilités et facilite la maintenance et l'évolutivité.
 
@@ -47,14 +47,14 @@ Le projet utilise une base de données relationnelle PostgreSQL.
 
 ### Modèles présents :
 
-* **User** : utilisateurs avec id, username, mot de passe hashé, roleId
-* **Role** : rôles utilisateurs (Admin, User)
-* **Post** : articles avec titre, contenu, et référence vers l'utilisateur auteur
+- **User** : utilisateurs avec id, username, mot de passe hashé, roleId
+- **Role** : rôles utilisateurs (Admin, User)
+- **Post** : articles avec titre, contenu, et référence vers l'utilisateur auteur
 
 ### Diagrammes
 
-* MCD : ![MCD](./docs/conception/MCD/MCD.png)
-* MLD : ![MLD](./docs/conception/MLD/MLD.png)
+- MCD : ![MCD](./docs/conception/MCD/MCD.png)
+- MLD : ![MLD](./docs/conception/MLD/MLD.png)
 
 ---
 
@@ -117,9 +117,9 @@ http://localhost:3000/api-docs
 
 ## 🔐 Authentification & Sécurité
 
-* Les utilisateurs peuvent s'inscrire via `/api/register`.
-* Se connecter via `/api/login` et obtenir un token JWT.
-* Utiliser ce token pour accéder aux routes protégées :
+- Les utilisateurs peuvent s'inscrire via `/api/register`.
+- Se connecter via `/api/login` et obtenir un token JWT.
+- Utiliser ce token pour accéder aux routes protégées :
 
 ```http
 Authorization: Bearer <votre_token>
@@ -159,12 +159,12 @@ Elle permet de visualiser et de tester toutes les routes directement avec un tok
 
 ## 🛡️ Sécurité du Projet
 
-* **Mots de passe** : hashés avec **argon2**.
-* **Authentification** : via **JWT**.
-* **Contrôle des rôles** : seuls les "Admin" peuvent créer, modifier ou supprimer des articles.
-* **Validation des données** : avec **express-validator**.
-* **Middleware global de gestion des erreurs**.
-* **Bonne gestion des variables d'environnement** pour protéger les données sensibles.
+- **Mots de passe** : hashés avec **argon2**.
+- **Authentification** : via **JWT**.
+- **Contrôle des rôles** : seuls les "Admin" peuvent créer, modifier ou supprimer des articles.
+- **Validation des données** : avec **express-validator**.
+- **Middleware global de gestion des erreurs**.
+- **Bonne gestion des variables d'environnement** pour protéger les données sensibles.
 
 ---
 
@@ -180,9 +180,9 @@ npm run test
 
 Tests réalisés :
 
-* Authentification (login, register)
-* Gestion des articles (GET, POST, PUT, DELETE)
-* Vérification des erreurs 401 / 403 et des cas limites
+- Authentification (login, register)
+- Gestion des articles (GET, POST, PUT, DELETE)
+- Vérification des erreurs 401 / 403 et des cas limites
 
 ---
 
@@ -194,7 +194,7 @@ Ce projet est prévu pour être déployé dans un environnement type **Docker** 
 
 ### 1️⃣ Prérequis
 
-* Avoir **Docker** et **Docker Compose** installés sur votre machine.
+- Avoir **Docker** et **Docker Compose** installés sur votre machine.
 
 ### 2️⃣ Variables d'environnement (sécurisées)
 
@@ -215,13 +215,13 @@ Ces variables sont externalisées et ne doivent **jamais être partagées sur Gi
 ### 3️⃣ Lancer les containers
 
 ```bash
-docker-compose --env-file .env up --build
+docker compose --env-file .env up --build
 ```
 
 Cela démarre :
 
-* Un container pour la base PostgreSQL.
-* Un container pour l'API Node.js.
+- Un container pour la base PostgreSQL.
+- Un container pour l'API Node.js.
 
 L’API sera accessible sur :
 
@@ -238,23 +238,36 @@ http://localhost:3000/api-docs
 ### 4️⃣ Arrêter les containers
 
 ```bash
-docker-compose down
+docker compose down
 ```
 
 ### 5️⃣ Points forts de la dockerisation
 
-* 🔐 **Sécurité** ➔ Pas de secrets dans le code.
-* 🌍 **Portabilité** ➔ Fonctionne sur toutes les machines.
-* 💾 **Persistance des données** ➔ La base PostgreSQL utilise un volume Docker (`postgres_data`).
+- 🔐 **Sécurité** ➔ Pas de secrets dans le code.
+- 🌍 **Portabilité** ➔ Fonctionne sur toutes les machines.
+- 💾 **Persistance des données** ➔ La base PostgreSQL utilise un volume Docker (`postgres_data`).
+
+### 📄 Mémo Commandes Docker
+
+| Commande                                | Description                                 |
+| --------------------------------------- | ------------------------------------------- |
+| `docker compose up --build`             | Démarre les containers avec build à jour    |
+| `docker compose down`                   | Stoppe et supprime les containers           |
+| `docker compose down -v`                | Supprime aussi les volumes (reset complet)  |
+| `docker compose ps`                     | Liste les containers en cours               |
+| `docker compose logs -f`                | Affiche les logs en direct                  |
+| `docker exec -it <nom_du_container> sh` | Ouvre un terminal dans le container (debug) |
+
+Les containers et volumes peuvent également être visualisés et gérés depuis **Docker Desktop**.
 
 ---
 
 ## 📈 Veille Technologique
 
-* Intégration de **Swagger** pour améliorer la documentation et les tests d'API.
-* Mise en place de bonnes pratiques de sécurité selon les recommandations **ANSSI**.
-* Suivi des nouvelles versions de Node.js, Express et des bonnes pratiques API REST.
-* Préparation au déploiement Docker et DevOps.
+- Intégration de **Swagger** pour améliorer la documentation et les tests d'API.
+- Mise en place de bonnes pratiques de sécurité selon les recommandations **ANSSI**.
+- Suivi des nouvelles versions de Node.js, Express et des bonnes pratiques API REST.
+- Préparation au déploiement Docker et DevOps.
 
 ---
 
@@ -262,9 +275,9 @@ docker-compose down
 
 Ce projet a été réalisé par **Alex** dans le but de :
 
-* Développer mes compétences backend
-* M'entraîner à produire un code professionnel, documenté et sécurisé
-* Préparer l'obtention du **Titre Professionnel Concepteur Développeur d'Applications (CDA)**
+- Développer mes compétences backend
+- M'entraîner à produire un code professionnel, documenté et sécurisé
+- Préparer l'obtention du **Titre Professionnel Concepteur Développeur d'Applications (CDA)**
 
 ---
 
