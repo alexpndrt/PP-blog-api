@@ -7,7 +7,8 @@ Ce projet a été réalisé dans le cadre de ma formation au Titre Professionnel
 - Consolider mes compétences en développement backend.
 - Maîtriser la création d'une API REST sécurisée avec **Node.js**, **Express** et **PostgreSQL**.
 - Mettre en place une authentification sécurisée et une gestion des droits d'accès.
-- Apprendre à documenter et à tester correctement une API.
+- Documenter et tester correctement une API.
+- Mettre en place une **CI/CD automatisée avec GitHub Actions** pour garantir la qualité.
 - Préparer le projet à un déploiement professionnel.
 
 Il s'agit d'un projet d'entraînement personnel visant à m'améliorer et à appliquer les bonnes pratiques vues en formation.
@@ -25,6 +26,8 @@ Il s'agit d'un projet d'entraînement personnel visant à m'améliorer et à app
 - **express-validator** pour la validation des données
 - **Swagger (swagger-jsdoc + swagger-ui-express)** pour la documentation
 - **Assert (Node.js)** pour les tests
+- **Docker & Docker Compose** pour la conteneurisation
+- **GitHub Actions** pour l'intégration et les tests automatisés
 
 ---
 
@@ -73,9 +76,7 @@ cd blog-api
 npm install
 ```
 
-### 3. Configurer le fichier `.env` (à ne pas diffuser publiquement)
-
-**Important :** Les variables d'environnement doivent être créées dans un fichier `.env` local qui ne doit jamais être publié ou partagé. Voici les clés nécessaires :
+### 3. Configurer le fichier `.env`
 
 ```
 PORT=3000
@@ -117,13 +118,10 @@ http://localhost:3000/api-docs
 
 ## 🔐 Authentification & Sécurité
 
-- Les utilisateurs peuvent s'inscrire via `/api/register`.
-- Se connecter via `/api/login` et obtenir un token JWT.
-- Utiliser ce token pour accéder aux routes protégées :
-
-```http
-Authorization: Bearer <votre_token>
-```
+- Inscriptions ➔ `/api/register`
+- Connexion ➔ `/api/login` ➔ obtention d'un JWT
+- Utilisation du JWT ➔ `Authorization: Bearer <token>`
+- Accès aux routes protégées et gestion des rôles (Admin/User)
 
 Les actions sensibles comme créer, modifier ou supprimer un article nécessitent un rôle "Admin".
 
@@ -147,7 +145,7 @@ La documentation complète de chaque route est disponible dans Swagger.
 
 ## 📚 Documentation Swagger
 
-Swagger est intégré et accessible via :
+Accessible sur :
 
 ```
 http://localhost:3000/api-docs
@@ -170,25 +168,19 @@ Elle permet de visualiser et de tester toutes les routes directement avec un tok
 
 ## 🧪 Tests
 
-Les tests sont écrits en utilisant le module natif **Assert** de Node.js pour rester simple et léger.
-
-### Pour exécuter les tests :
+- Tests unitaires et fonctionnels ➔ **Node\:test + Assert + Supertest**
+- Tests de sécurité ➔ injections, accès non autorisés
+- Tests de non-régression ➔ cycle complet CRUD
 
 ```bash
 npm run test
 ```
 
-Tests réalisés :
-
-- Authentification (login, register)
-- Gestion des articles (GET, POST, PUT, DELETE)
-- Vérification des erreurs 401 / 403 et des cas limites
+Les tests sont également exécutés automatiquement via **GitHub Actions** à chaque **push** ou **pull request**.
 
 ---
 
-## 🚀 Déploiement & Environnement
-
-Ce projet est prévu pour être déployé dans un environnement type **Docker** ou sur un PaaS comme **Heroku**, **Render** ou **Railway**.
+## 🚀 Déploiement & CI/CD
 
 ### 🐳 Déploiement avec Docker (Pro)
 
@@ -260,25 +252,23 @@ docker compose down
 
 Les containers et volumes peuvent également être visualisés et gérés depuis **Docker Desktop**.
 
----
 
-## 📈 Veille Technologique
+### CI/CD GitHub Actions :
 
-- Intégration de **Swagger** pour améliorer la documentation et les tests d'API.
-- Mise en place de bonnes pratiques de sécurité selon les recommandations **ANSSI**.
-- Suivi des nouvelles versions de Node.js, Express et des bonnes pratiques API REST.
-- Préparation au déploiement Docker et DevOps.
+- Tests automatisés à chaque push
+- Statut visible dans l’onglet Actions
+- Protection des branches possible
 
 ---
 
-## 👤 Auteur
+## 📈 Prochaines évolutions
 
-Ce projet a été réalisé par **Alex** dans le but de :
-
-- Développer mes compétences backend
-- M'entraîner à produire un code professionnel, documenté et sécurisé
-- Préparer l'obtention du **Titre Professionnel Concepteur Développeur d'Applications (CDA)**
+- Frontend React avec consommation de l'API
+- Déploiement complet sur Render ou Railway
+- Monitoring et optimisation des performances
 
 ---
 
-📫 N'hésitez pas à me contacter pour toute question ou retour sur ce projet !
+👤 Réalisé par **Alex** dans le cadre de la formation CDA.
+
+✅ Projet complet : Docker, Sécurité, Tests, CI/CD, Documentation.
