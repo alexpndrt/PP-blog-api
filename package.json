@@ -6,11 +6,17 @@
   "scripts": {
     "start": "node dist/index.js",
     "dev": "nodemon",
+    "dev:local": "dotenv -e .env.dev -- nodemon",
+    "dev:docker": "dotenv -e .env.docker -- nodemon",
+    "dev:prod": "dotenv -e .env.prod -- node dist/index.js",
     "build": "tsc",
-    "reset-db": "psql -U postgres -d postgres -c \"DROP DATABASE IF EXISTS blogapi;\" && psql -U postgres -d postgres -c \"CREATE DATABASE blogapi;\"",
+    "create-db": "psql -U postgres -d postgres -c \"CREATE DATABASE blogapi;\"",
+    "drop-db": "psql -U postgres -d postgres -c \"DROP DATABASE IF EXISTS blogapi;\"",
     "seed-db": "PGPASSWORD=blogapi psql -h localhost -U blogapi -d blogapi -f data/init-dev-db.sql",
+    "reset-db": "npm run drop-db && npm run create-db",
     "reset-and-seed": "npm run reset-db && npm run seed-db",
-    "test": "node --test"
+    "test": "node --test",
+    "test:docker": "dotenv -e .env.docker -- node --test"
   },
   "keywords": [],
   "author": "",
@@ -30,6 +36,7 @@
     "swagger-ui-express": "^5.0.1"
   },
   "devDependencies": {
+    "dotenv-cli": "^8.0.0",
     "jest": "^30.0.4",
     "nodemon": "^3.1.10",
     "supertest": "^7.1.1"

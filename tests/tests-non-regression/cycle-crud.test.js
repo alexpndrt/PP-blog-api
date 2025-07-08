@@ -6,10 +6,22 @@ import request from "supertest";
 import app from "../../src/app.js";
 
 // 👉 Remplacer par un vrai token admin valide
-const adminToken =
-  "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJhZG1pbiIsInJvbGVJZCI6MSwiaWF0IjoxNzUxOTc1MDQxLCJleHAiOjE3NTE5ODIyNDF9.6i-oI7BZlkIjeZMBK2YQJPWc5-8j9kfkcBO8W_bRBp4";
-
+let adminToken = null;
 let createdPostId = null;
+
+// Fonction pour obtenir un vrai token avant les tests
+async function getAdminToken() {
+  const res = await request(app)
+    .post("/api/login")
+    .send({ username: "admin", password: "admin" }); // Remplace par ton vrai login si besoin
+
+  return `Bearer ${res.body.token}`;
+}
+
+test("setup: login as admin", async () => {
+  adminToken = await getAdminToken();
+  assert.ok(adminToken);
+});
 
 // 🔄 Étape 1 : Créer un article
 test("should create a new post", async () => {

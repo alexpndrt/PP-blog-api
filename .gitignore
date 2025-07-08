@@ -1,3 +1,19 @@
-node_modules
-dist
+# Node.js
+node_modules/
+dist/
+
+# Environnements
 .env
+.env.dev
+.env.docker
+.env.prod
+
+# Logs
+logs
+*.log
+
+# System
+.DS_Store
+
+# Docker
+postgres_data/
