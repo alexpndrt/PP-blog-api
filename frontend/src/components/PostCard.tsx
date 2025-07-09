@@ -1,93 +1,75 @@
-// ✅ src/components/PostCard.tsx (avec modale rapide de modification + affichage auteur)
+// ✅ src/components/PostCard.tsx (refactored)
 
-import { useState } from "react";
-import axios from "axios";
-import { useAuth } from "../contexts/AuthContext";
+import { useState } from 'react';
+import { useAuth } from '../contexts/AuthContext';
+import { updatePost, deletePost } from '../api/postsApi';
+
+type Post = {
+  id: number;
+  title: string;
+  content: string;
+  createdAt: string;
+  author?: {
+    username: string;
+  };
+};
 
 interface PostCardProps {
-  post: {
-    id: number;
-    title: string;
-    content: string;
-    createdAt: string;
-    author?: {
-      username: string;
-    };
-  };
+  post: Post;
+  onPostUpdated?: () => void;
 }
 
-export default function PostCard({ post }: PostCardProps) {
-  const { username } = useAuth();
-  const isAdmin = username === "admin";
+export default function PostCard({ post, onPostUpdated }: PostCardProps) {
+  const { username, token } = useAuth();
+
+  const isOwner = username === post.author?.username;
+  const isAdmin = username === 'admin';
+  const canEditOrDelete = isOwner || isAdmin;
 
   const [showEdit, setShowEdit] = useState(false);
   const [newTitle, setNewTitle] = useState(post.title);
   const [newContent, setNewContent] = useState(post.content);
+  const [error, setError] = useState('');
 
   const handleDelete = async () => {
-    const token = localStorage.getItem("token");
     try {
-      await axios.delete(`http://localhost:3000/api/posts/${post.id}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      window.location.reload();
+      await deletePost(token, post.id);
+      if (onPostUpdated) onPostUpdated();
     } catch (err) {
-      console.error("Erreur suppression:", err);
+      console.error(err);
+      setError("Erreur lors de la suppression de l'article.");
     }
   };
 
   const handleUpdate = async () => {
-    const token = localStorage.getItem("token");
     try {
-      await axios.put(
-        `http://localhost:3000/api/posts/${post.id}`,
-        {
-          title: newTitle,
-          content: newContent,
-        },
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
+      await updatePost(token, post.id, { title: newTitle, content: newContent });
       setShowEdit(false);
-      window.location.reload();
+      if (onPostUpdated) onPostUpdated();
     } catch (err) {
-      console.error("Erreur modification:", err);
+      console.error(err);
+      setError("Erreur lors de la mise à jour de l'article.");
     }
   };
 
   return (
-    <div className="bg-white rounded shadow p-4">
+    <div className="bg-white rounded shadow p-4 mb-4">
       <h3 className="font-bold text-lg mb-1">{post.title}</h3>
-      <p className="text-sm text-gray-500 mb-2">
-        Auteur : {post.author?.username || "Inconnu"}
-      </p>
-
+      <p className="text-sm text-gray-500 mb-2">Auteur : {post.author?.username || 'Inconnu'}</p>
       <p className="text-gray-700 mb-2">{post.content}</p>
-      <p className="text-xs text-gray-400">
-        {new Date(post.createdAt).toLocaleString()}
-      </p>
+      <p className="text-xs text-gray-400">{new Date(post.createdAt).toLocaleString()}</p>
 
-      {isAdmin && (
+      {canEditOrDelete && (
         <div className="mt-3 flex gap-4">
-          <button
-            onClick={() => setShowEdit(true)}
-            className="text-blue-600 hover:underline"
-          >
-            Modifier
-          </button>
-          <button
-            onClick={handleDelete}
-            className="text-red-600 hover:underline"
-          >
-            Supprimer
-          </button>
+          <button onClick={() => setShowEdit(true)} className="text-blue-600 hover:underline">Modifier</button>
+          <button onClick={handleDelete} className="text-red-600 hover:underline">Supprimer</button>
         </div>
       )}
 
-      {/* ✅ Modale rapide */}
       {showEdit && (
         <div className="mt-4 border-t pt-4">
+          {error && <p className="text-red-500 mb-2">{error}</p>}
+
           <input
             type="text"
             value={newTitle}
@@ -101,18 +83,8 @@ export default function PostCard({ post }: PostCardProps) {
             className="border p-2 rounded w-full mb-2"
           />
 
-          <button
-            onClick={handleUpdate}
-            className="bg-green-600 text-white px-4 py-2 rounded mr-2"
-          >
-            Valider
-          </button>
-          <button
-            onClick={() => setShowEdit(false)}
-            className="bg-gray-400 text-white px-4 py-2 rounded"
-          >
-            Annuler
-          </button>
+          <button onClick={handleUpdate} className="bg-green-600 text-white px-4 py-2 rounded mr-2">Valider</button>
+          <button onClick={() => setShowEdit(false)} className="bg-gray-400 text-white px-4 py-2 rounded">Annuler</button>
         </div>
       )}
     </div>
