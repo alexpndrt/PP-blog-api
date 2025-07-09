@@ -39,32 +39,36 @@ jobs:
       JWT_SECRET: supersecret
 
     steps:
-      # 1️⃣ Récupérer le code source du repo
+      # 1️⃣ Récupérer le code source
       - name: 📥 Checkout code
         uses: actions/checkout@v3
 
-      # 2️⃣ Installer Node.js (ici version 20)
+      # 2️⃣ Installer Node.js
       - name: 📦 Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: 20
 
-      # 3️⃣ Installer les dépendances déclarées dans package.json
-      - name: 📦 Install dependencies
+      # 3️⃣ Aller dans le dossier backend et installer les dépendances
+      - name: 📦 Install backend dependencies
+        working-directory: ./backend
         run: npm ci
 
-      # 4️⃣ Attendre que la base PostgreSQL soit opérationnelle
+      # 4️⃣ Attendre PostgreSQL
       - name: 🛠️ Wait for PostgreSQL
+        working-directory: ./backend
         run: |
           until pg_isready -h localhost -p 5432; do
             echo "⏳ Waiting for database..."
             sleep 2
           done
 
-      # 5️⃣ Exécuter le script SQL pour créer les tables et rôles initiaux
+      # 5️⃣ Exécuter le script de seed dans backend
       - name: 🗄️ Seed Database
+        working-directory: ./backend
         run: npm run seed-db
 
-      # 6️⃣ Lancer les tests unitaires et fonctionnels avec Node.js
+      # 6️⃣ Lancer les tests dans backend
       - name: 🚀 Run tests
+        working-directory: ./backend
         run: npm run test
