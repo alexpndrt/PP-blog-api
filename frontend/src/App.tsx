@@ -1,11 +1,13 @@
-function App() {
+// ✅ src/App.tsx
+// ➔ Composant racine avec Router
+
+import { AuthProvider } from "./contexts/AuthContext";
+import AppRouter from "./router";
+
+export default function App() {
   return (
-    <>
-      <div>
-        <h1 className="underline">Hello world</h1>
-      </div>
-    </>
+    <AuthProvider>
+      <AppRouter />
+    </AuthProvider>
   );
 }
-
-export default App;

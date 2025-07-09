@@ -1,4 +1,4 @@
-// src/routes/postRoutes.js
+// ✅ src/routes/postRoutes.js (CRUD complet corrigé avec Swagger)
 
 import { Router } from "express";
 import {
@@ -10,13 +10,11 @@ import {
 } from "../controllers/index.js";
 import {
   authenticateToken,
-  authorizeRoles,
   validatePost,
 } from "../middlewares/index.js";
 
 const router = Router();
 
-// Route pour récupérer tous les articles (authentification requise)
 /**
  * @swagger
  * /posts:
@@ -33,7 +31,6 @@ const router = Router();
  */
 router.get("/", authenticateToken, getAllPosts);
 
-// Route pour récupérer un article par ID (authentification requise)
 /**
  * @swagger
  * /posts/{id}:
@@ -55,15 +52,13 @@ router.get("/", authenticateToken, getAllPosts);
  *       404:
  *         description: Article non trouvé
  */
-
 router.get("/:id", authenticateToken, getPostById);
 
-// Route pour créer un nouvel article (admin uniquement + validation des données)
 /**
  * @swagger
  * /posts:
  *   post:
- *     summary: Créer un nouvel article (Admin uniquement)
+ *     summary: Créer un nouvel article (User ou Admin)
  *     tags: [Posts]
  *     security:
  *       - bearerAuth: []
@@ -88,24 +83,14 @@ router.get("/:id", authenticateToken, getPostById);
  *         description: Article créé
  *       400:
  *         description: Erreur de validation
- *       403:
- *         description: Accès interdit
  */
+router.post("/", authenticateToken, validatePost, createPost);
 
-router.post(
-  "/",
-  authenticateToken,
-  authorizeRoles(1), // 1 correspond au rôle admin
-  validatePost,
-  createPost
-);
-
-// Route pour mettre à jour un article existant (admin uniquement + validation des données)
 /**
  * @swagger
  * /posts/{id}:
  *   put:
- *     summary: Mettre à jour un article (Admin uniquement)
+ *     summary: Mettre à jour un article (User propriétaire ou Admin)
  *     tags: [Posts]
  *     security:
  *       - bearerAuth: []
@@ -135,24 +120,18 @@ router.post(
  *     responses:
  *       200:
  *         description: Article mis à jour
+ *       403:
+ *         description: Non autorisé
  *       404:
  *         description: Article non trouvé
  */
+router.put("/:id", authenticateToken, validatePost, updatePost);
 
-router.put(
-  "/:id",
-  authenticateToken,
-  authorizeRoles(1), // 1 correspond au rôle admin
-  validatePost,
-  updatePost
-);
-
-// Route pour supprimer un article (admin uniquement)
 /**
  * @swagger
  * /posts/{id}:
  *   delete:
- *     summary: Supprimer un article (Admin uniquement)
+ *     summary: Supprimer un article (User propriétaire ou Admin)
  *     tags: [Posts]
  *     security:
  *       - bearerAuth: []
@@ -166,10 +145,11 @@ router.put(
  *     responses:
  *       200:
  *         description: Article supprimé
+ *       403:
+ *         description: Non autorisé
  *       404:
  *         description: Article non trouvé
  */
-
-router.delete("/:id", authenticateToken, authorizeRoles(1), deletePost);
+router.delete("/:id", authenticateToken, deletePost);
 
 export default router;

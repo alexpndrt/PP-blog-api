@@ -10,10 +10,10 @@ import { User, Role } from "../models/index.js";
 
 export const register = async (req, res, next) => {
   try {
-    const { username, password, roleId } = req.body;
+    const { username, password } = req.body;
 
     // Vérifie que tous les champs obligatoires sont présents
-    if (!username || !password || !roleId) {
+    if (!username || !password) {
       return res.status(400).json({ error: "Champs manquants" });
     }
 
@@ -23,10 +23,10 @@ export const register = async (req, res, next) => {
       return res.status(400).json({ error: "Nom d'utilisateur déjà pris" });
     }
 
-    // Vérifie que le roleId correspond à un rôle valide
-    const role = await Role.findByPk(roleId);
+    //  Cherche le rôle 'user' en base
+    const role = await Role.findOne({ where: { name: "user" } });
     if (!role) {
-      return res.status(400).json({ error: "Rôle inexistant" });
+      return res.status(500).json({ error: "Rôle 'user' introuvable" });
     }
 
     // Hachage sécurisé du mot de passe avec Argon2
@@ -36,7 +36,7 @@ export const register = async (req, res, next) => {
     const newUser = await User.create({
       username,
       password: hashedPassword,
-      roleId,
+      roleId: role.id,
     });
 
     // Retourne un statut 201 avec les informations de l'utilisateur créé
