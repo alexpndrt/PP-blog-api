@@ -4,12 +4,12 @@
 
 ## Plan de tests complet avec ID
 
-| ID    | Fonction testée        | Cas de test                      | Données envoyées / Prérequis             | Résultat attendu      |
-| ----- | ---------------------- | -------------------------------- | ---------------------------------------- | --------------------- |
-| T-CR1 | Création d'article     | ✅ Création valide par Admin     | Token admin + title + content            | 201 Created + Post ID |
-| T-CR2 | Lecture d'article      | ✅ Lecture du post créé          | Token admin/user + postId valide         | 200 OK + post complet |
-| T-CR3 | Modification d'article | ✅ Modification valide par Admin | Token admin + postId + nouvelles données | 200 OK + post modifié |
-| T-CR4 | Suppression d'article  | ✅ Suppression valide par Admin  | Token admin + postId valide              | 200 OK                |
+| ID    | Fonction testée        | Cas de test                       | Données envoyées / Prérequis              | Résultat attendu      |
+| ----- | ---------------------- | --------------------------------- | ----------------------------------------- | --------------------- |
+| T-CR1 | Création d'article     | ✅ Création valide par Admin/User | Token valide + title + content            | 201 Created + Post ID |
+| T-CR2 | Lecture d'article      | ✅ Lecture du post créé           | Token valide + postId valide              | 200 OK + post complet |
+| T-CR3 | Modification d'article | ✅ Modification par Admin/User    | Token valide + postId + nouvelles données | 200 OK + post modifié |
+| T-CR4 | Suppression d'article  | ✅ Suppression par Admin/User     | Token valide + postId valide              | 200 OK                |
 
 ---
 
