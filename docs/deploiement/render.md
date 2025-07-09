@@ -1,118 +1,122 @@
-# 📄 Déploiement de l'API Blog sur Render (Base de Données + Application)
+# 📅 Guide Complet de Déploiement sur Render (Backend + Database)
 
-Ce document récapitule **étape par étape** comment déployer votre API ainsi que sa base de données PostgreSQL sur **Render.com**.
+## 🔐 Objectif
+
+Ce document explique **pas à pas** comment déployer une API Node.js avec Express et PostgreSQL sur **Render**, avec explications simples pour pouvoir refaire la procédure plus tard ou la partager à l'équipe.
 
 ---
 
-## 🚀 1. Créer la base de données PostgreSQL
+## 🛁 Création de la base de données PostgreSQL sur Render
 
 1. Connectez-vous à [Render](https://dashboard.render.com/).
-2. Cliquez sur **New ➔ PostgreSQL**.
-3. Remplissez les champs suivants :
 
-| Champ      | Valeur Exemple                  |
-| ---------- | ------------------------------- |
-| Name       | blogapi-db                      |
-| Database   | (laisser vide ou personnaliser) |
-| User       | (laisser vide ou personnaliser) |
-| Region     | Oregon (US West)                |
-| PostgreSQL | 16                              |
+2. Cliquez sur **New +** > **PostgreSQL**.
 
-4. Cliquez sur **Create Database**.
+3. Choisissez :
 
-### ✅ Une fois créée :
+   - **Name** : nom de la base (ex: `blogapi-db`)
+   - **Region** : gardez par défaut (Frankfurt si Europe)
+   - **Plan** : gratuit (**Starter**)
 
-- Notez les informations suivantes :
+4. Créez la base.
 
-  - **Hostname**
-  - **Database** (nom de la base)
-  - **User**
-  - **Password**
-  - **Port** (5432 par défaut)
+5. Une fois créée :
 
-5. Dans **Access Control ➔ Source** : ajoutez `0.0.0.0/0` pour autoriser l'accès depuis partout.
+   - Récupérez les informations **Host**, **Database**, **User**, **Password**, **Port**
+   - Conservez-les pour configurer les variables d'environnement du Web Service.
 
 ---
 
-## 🗂️ 2. Créer les Variables d'Environnement pour l'application
+## 📢 Création du Web Service Node.js sur Render
 
-Vous devez créer un fichier `.env.prod` **localement** dans votre projet avec ces variables (les valeurs sont à adapter) :
+1. Cliquez sur **New +** > **Web Service**.
+2. Connectez Render à votre repo GitHub.
+3. Sélectionnez le repo de votre projet (ex: `PP-blog-api`).
 
-```env
-PORT=10000
-DB_NAME=blogapi_xxxx
-DB_USER=bloguser
-DB_PASSWORD=lepassworddonneparrender
-DB_HOST=lehostname.render.com
-DB_PORT=5432
-JWT_SECRET=supersecret
+### Configuration du Service :
+
+- **Name** : nom du service (ex: `pp-blog-api`)
+- **Region** : même que la base.
+- **Branch** : `main`
+- **Build Command** : `npm install`
+- **Start Command** : `npm run prod`
+- **Instance Type** : Free (Starter)
+
+4. Cliquez **Create Web Service**.
+
+---
+
+## 🛡️ Configuration des Variables d'Environnement Render
+
+Dans l'onglet **Environment** du service Web Render, ajoutez les variables suivantes :
+
+| Key         | Value                         |
+| ----------- | ----------------------------- |
+| PORT        | 10000                         |
+| DB_HOST     | (host Render ex: dpg-xxxxxxx) |
+| DB_PORT     | 5432                          |
+| DB_NAME     | (nom de la base Render)       |
+| DB_USER     | (user Render)                 |
+| DB_PASSWORD | (mot de passe Render)         |
+| JWT_SECRET  | supersecret                   |
+
+_Note : le fichier `.env.prod` sert à garder ces valeurs en local pour tests, mais **ne doit pas être poussé sur GitHub**._
+
+---
+
+## 🛠️ Étapes du Build & Déploiement
+
+1. Render clone votre repo.
+2. Il exécute `npm install` pour installer les dépendances.
+3. Il exécute `npm run prod` pour lancer le serveur.
+4. La connexion à la base se fait via les variables Render.
+
+Si tout est OK : Render affiche l'URL de votre API (ex: `https://pp-blog-api.onrender.com`).
+
+La documentation Swagger sera accessible via :
+
+```
+https://pp-blog-api.onrender.com/api-docs
 ```
 
-Ensuite :
+---
 
-1. Sur Render ➔ Votre Web Service ➔ **Environment Variables**.
-2. Ajoutez manuellement ces variables.
+## 🔄 Mises à jour du code
 
-🔑 **Conseils :**
+- Chaque **push sur GitHub** vers la branche `main` déclenche un **Auto Deploy**.
+- Vos changements sont automatiquement déployés en ligne.
 
-- Ne mettez jamais ce fichier `.env.prod` sur GitHub.
-- Assurez-vous que les noms des clés sont **strictement identiques** à ceux attendus dans le code.
+Pour vérifier :
+
+1. Push vers GitHub.
+2. Render reconstruit et redéploie.
 
 ---
 
-## ⚙️ 3. Déployer l'Application API (Docker)
+## 🛠️ Accès et Gestion de la base PostgreSQL Render
 
-1. Depuis le dashboard Render ➔ **New ➔ Web Service**.
-2. Choisissez votre repo GitHub où se trouve votre projet.
-3. Configuration à remplir :
-
-| Champ          | Valeur                                       |
-| -------------- | -------------------------------------------- |
-| Name           | PP-blog-api                                  |
-| Language       | Docker                                       |
-| Branch         | main                                         |
-| Region         | la même que la base (ex : Oregon US West)    |
-| Root Directory | (laisser vide si Dockerfile est à la racine) |
-
-4. Choisissez l'instance **Free** (ou Starter si besoin).
-5. Ajoutez les **Environment Variables** (voir étape 2).
-6. Cliquez sur **Deploy Web Service**.
-
-Render va :
-
-- Lancer votre `Dockerfile`.
-- Installer les dépendances.
-- Connecter à la base PostgreSQL.
-- Exposer votre API à une URL publique.
+- Render fournit un bouton **Connect** pour ouvrir un terminal SQL.
+- Vous pouvez aussi utiliser **pgAdmin** ou **DBeaver** avec les infos Render.
+- Plus besoin du fichier `.sql` local pour Render : la base se gère directement en ligne.
 
 ---
 
-## 🔗 4. Vérifier que tout fonctionne
+## 📈 Avantages de Render
 
-- Accédez à votre API : `https://nomduprojet.onrender.com/api`
-- Accédez à la documentation Swagger : `https://nomduprojet.onrender.com/api-docs`
-- Consultez les logs dans l'onglet **Events**.
-
----
-
-## 🛠️ Commandes utiles en cas de besoin
-
-| Action                         | Commande / Étape                                     |
-| ------------------------------ | ---------------------------------------------------- |
-| Redéployer manuellement        | Bouton **Manual Deploy** sur Render                  |
-| Accéder aux logs               | Onglet **Logs** ou **Events**                        |
-| Modifier les variables d'env   | Onglet **Environment ➔ Add/Edit**                    |
-| Changer l'instance (puissance) | Onglet **Scaling ➔ Change Instance Type**            |
-| Mettre à jour le code          | Faire un `git push` sur la branche suivie par Render |
+- Accessible publiquement sans configuration serveur.
+- Auto Deploy grâce à GitHub.
+- PostgreSQL et Node.js gérés sans serveur.
+- Gratuit en mode développement.
 
 ---
 
-## 📝 Remarques importantes
+## 📅 Prochaines étapes possibles
 
-- Les bases de données gratuites Render expirent au bout de **90 jours** si elles ne sont pas utilisées.
-- Prévoyez un budget si vous souhaitez un environnement persistant pour la production.
-- Pensez à sécuriser les endpoints sensibles et valider les données côté serveur.
+- Déploiement du **frontend React** (Render ou Vercel).
+- Mise en place de la **CI/CD** complète avec GitHub Actions.
+- Ajout de logs avancés (Sentry, LogRocket).
 
 ---
 
-_Rédigé par Alex — CDA 2025._
+📅 Auteur : Alex Pondart
+Projet : **PP-Blog-API** pour la formation **CDA**
