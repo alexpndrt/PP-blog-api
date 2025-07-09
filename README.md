@@ -253,18 +253,126 @@ docker compose down
 Les containers et volumes peuvent également être visualisés et gérés depuis **Docker Desktop**.
 
 
-### CI/CD GitHub Actions :
+### ⚙️ CI/CD avec GitHub Actions :
 
 - Tests automatisés à chaque push
 - Statut visible dans l’onglet Actions
 - Protection des branches possible
 
+Chaque push ou pull request déclenche :
+
+   - Installation des dépendances
+   - Exécution des tests automatisés avec npm run test
+
+Le badge GitHub indique l'état des tests dans l’onglet Actions.
+
+Avantages :
+
+   - Tests automatiques ➔ pas de régression
+   - Préparation au déploiement continu
+
 ---
+
+## 🚀 Déploiement sur Render
+
+### 📝 Étapes du Déploiement :
+
+---
+
+### 1⃣ Créer la base PostgreSQL sur Render
+
+- Aller dans **Render > Databases > New PostgreSQL**.
+- Donner un nom à la base (ex: `blogapi`).
+- Sélectionner la région **Oregon (US West)**.
+- Créer la base et **récupérer** les informations suivantes :
+  - **Database name**
+  - **User**
+  - **Password**
+  - **Host** (ex : `dpg-xxxxx`) ➔ pas de `.render.com`
+
+👉 Ces informations remplaceront celles du `.env.prod`.
+
+---
+
+### 2⃣ Configurer les Variables d'Environnement
+
+Dans le **Web Service Render** ➔ onglet **Environment Variables** :
+
+```
+PORT=10000
+DB_NAME=<database_name>
+DB_USER=<username>
+DB_PASSWORD=<password>
+DB_HOST=<hostname>
+DB_PORT=5432
+JWT_SECRET=supersecret
+```
+
+✅ Ces variables remplaceront le `.env` local. Il n'est **pas nécessaire d'uploader un `.env`**.
+
+---
+
+### 3⃣ Créer le Web Service Render
+
+- Aller dans **Render > New > Web Service**.
+- Connecter votre repo GitHub.
+- Choisir **Docker** comme type d’environnement.
+- Choisir la **branche main**.
+- Remplir les **Environment Variables**.
+
+---
+
+### 4⃣ Premier Déploiement
+
+- Render clone le repo.
+- Il exécute le **Dockerfile** : build de l'image, install des dépendances.
+- Lance automatiquement le serveur Node.js.
+- Affiche l'’URL publique comme :
+
+```
+https://nom-de-votre-app.onrender.com
+```
+
+✅ Votre API est en ligne.
+
+---
+
+### 5⃣ Mise à jour / Déploiement Continu
+
+- Chaque **push sur main** ➔ Render reconstruit et déploie.
+- CI/CD automatique si vous avez configuré **GitHub Actions**.
+
+---
+
+### 6⃣ Accéder à la Base PostgreSQL en ligne (optionnel)
+
+- Installer **pgAdmin**.
+- Se connecter avec les identifiants Render :
+  - Host ➔ à copier de Render
+  - Port ➔ 5432
+  - User / Password ➔ Render
+  - DB Name ➔ Render
+- Cocher **Public Access** sur Render si besoin.
+
+---
+
+✅ Vous pouvez ainsi accéder aux données directement.
+
+---
+
+### Récapitulatif
+
+| 👉 | Ce que fait Render |
+|------------|--------------------|
+| 🛠️ Build | Crée et déploie votre app avec Docker |
+| 🔄 Auto Deploy | Chaque push sur main redéploie l'app |
+| 💼 Database | Fournit une PostgreSQL en ligne |
+| 🔐 Secrets | Variables d'environnement sécurisées |
+
 
 ## 📈 Prochaines évolutions
 
 - Frontend React avec consommation de l'API
-- Déploiement complet sur Render ou Railway
 - Monitoring et optimisation des performances
 
 ---

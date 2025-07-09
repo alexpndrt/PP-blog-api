@@ -16,6 +16,9 @@ const swaggerDefinition = {
     {
       url: "http://localhost:3000/api", // Ici le préfixe de tes routes
     },
+    {
+      url: "https://pp-blog-api.onrender.com//api", // Ici le préfixe de tes routes
+    },
   ],
   components: {
     securitySchemes: {
