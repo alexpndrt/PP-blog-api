@@ -1,35 +1,34 @@
 // ✅ src/components/LoginForm.tsx
 // ➔ Composant formulaire de connexion avec gestion des états
 
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { useAuth } from "../contexts/AuthContext";
 
 export default function LoginForm() {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
   const navigate = useNavigate();
+  const { login } = useAuth();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError('');
+    setError("");
 
     try {
-      const response = await axios.post('http://localhost:3000/api/login', {
+      const response = await axios.post("http://localhost:3000/api/login", {
         username,
         password,
       });
 
       const token = response.data.token;
-      localStorage.setItem('token', token);
-
-      // Redirection après login
-      navigate('/posts');
-
+      login(token, username); // ✅ Stocke token et username dans le contexte
+      navigate("/posts");
     } catch (err) {
       console.error(err);
-      setError('Identifiants incorrects.');
+      setError("Identifiants incorrects.");
     }
   };
 

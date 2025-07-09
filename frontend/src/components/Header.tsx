@@ -1,28 +1,32 @@
-// 🔗 Header.tsx ➔ Barre de navigation en haut de la page
+// ✅ src/components/Header.tsx (modifié pour afficher Bienvenue)
 
-import { Link } from "react-router-dom";
+import { Link } from 'react-router-dom';
+import { useAuth } from '../contexts/AuthContext';
 
 export default function Header() {
+  const { username, logout } = useAuth();
+
   return (
     <header className="flex justify-between items-center p-4 shadow bg-white">
-      {/* ✅ Clique sur le titre pour revenir à l'accueil */}
       <Link to="/" className="text-xl font-bold hover:text-blue-600">
         Mon Blog
       </Link>
 
-      <nav className="space-x-4">
-        {/* ✅ Lien vers l'accueil accessible depuis n'importe quelle page */}
-        <Link to="/" className="text-gray-600 hover:underline">
-          Accueil
-        </Link>
+      <nav className="space-x-4 flex items-center">
+        {username && <span className="text-gray-700">Bienvenue : {username}</span>}
 
-        <Link to="/login" className="text-blue-600 hover:underline">
-          Connexion
-        </Link>
-        <Link to="/register" className="text-blue-600 hover:underline">
-          Inscription
-        </Link>
+        <Link to="/" className="text-gray-600 hover:underline">Accueil</Link>
+
+        {!username ? (
+          <>
+            <Link to="/login" className="text-blue-600 hover:underline">Connexion</Link>
+            <Link to="/register" className="text-blue-600 hover:underline">Inscription</Link>
+          </>
+        ) : (
+          <button onClick={logout} className="text-red-600 hover:underline">Déconnexion</button>
+        )}
       </nav>
     </header>
   );
 }
+
