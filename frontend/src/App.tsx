@@ -1,11 +1,8 @@
-function App() {
-  return (
-    <>
-      <div>
-        <h1 className="underline">Hello world</h1>
-      </div>
-    </>
-  );
-}
+// ✅ src/App.tsx
+// ➔ Composant racine avec Router
 
-export default App;
+import AppRouter from "./router";
+
+export default function App() {
+  return <AppRouter />;
+}
