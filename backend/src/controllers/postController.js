@@ -1,11 +1,18 @@
 // src/controllers/postController.js
 
-import { Post } from "../models/index.js";
+import { Post, User } from "../models/index.js";
 
 // Récupérer tous les articles
 export const getAllPosts = async (req, res, next) => {
   try {
-    const posts = await Post.findAll();
+    const posts = await Post.findAll({
+      include: {
+        model: User,
+        as: 'author',   // ✅ doit correspondre au alias défini dans Post.belongsTo
+        attributes: ["username"], // On ne récupère que le username de l'auteur
+      },
+      order: [["createdAt", "DESC"]], // Tri du plus récent au plus ancien
+    });
     res.json(posts);
   } catch (err) {
     next(err);
