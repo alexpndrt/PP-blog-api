@@ -53,20 +53,22 @@ test("should fail to register with missing fields", async () => {
   assert.ok(response.body.error);
 });
 
-// ❌ Rôle inexistant
-// Ce test vérifie que l'API renvoie une erreur si on fournit un roleId inexistant
+// ✅ Inscription valide sans roleId (corrigé)
+// Ce test vérifie qu'un utilisateur peut s'inscrire correctement sans fournir de rôle (rôle = user par défaut)
 
-test("should fail to register with non-existing role", async () => {
+test("should register a new user successfully", async () => {
   const uniqueUsername = `user_${Date.now()}`;
 
   const response = await request(app).post("/api/register").send({
     username: uniqueUsername,
     password: "password123",
-    roleId: 999, // roleId inexistant
+    // ❌ roleId supprimé car il n'est plus requis ni pris en compte
   });
 
-  assert.strictEqual(response.statusCode, 400); // ou 500 selon ton API
-  assert.ok(response.body.error);
+  // ✅ Le backend doit renvoyer 201 Created
+  assert.strictEqual(response.statusCode, 201);
+  assert.ok(response.body.user);
+  assert.strictEqual(response.body.user.username, uniqueUsername);
 });
 
 /******************************
