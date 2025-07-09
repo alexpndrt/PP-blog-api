@@ -1,23 +1,9 @@
-// ✅ src/components/PostCard.tsx (refactored)
+// ✅ src/components/PostCard.tsx (refactored avec types centralisés)
 
 import { useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { updatePost, deletePost } from '../api/postsApi';
-
-type Post = {
-  id: number;
-  title: string;
-  content: string;
-  createdAt: string;
-  author?: {
-    username: string;
-  };
-};
-
-interface PostCardProps {
-  post: Post;
-  onPostUpdated?: () => void;
-}
+import type { PostCardProps, UpdatePostData } from '../types';
 
 export default function PostCard({ post, onPostUpdated }: PostCardProps) {
   const { username, token } = useAuth();
@@ -27,8 +13,8 @@ export default function PostCard({ post, onPostUpdated }: PostCardProps) {
   const canEditOrDelete = isOwner || isAdmin;
 
   const [showEdit, setShowEdit] = useState(false);
-  const [newTitle, setNewTitle] = useState(post.title);
-  const [newContent, setNewContent] = useState(post.content);
+  const [newTitle, setNewTitle] = useState<UpdatePostData['title']>(post.title);
+  const [newContent, setNewContent] = useState<UpdatePostData['content']>(post.content);
   const [error, setError] = useState('');
 
   const handleDelete = async () => {

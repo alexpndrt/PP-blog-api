@@ -1,24 +1,21 @@
-// ✅ src/components/CreatePostForm.tsx (refactored)
+// ✅ src/components/CreatePostForm.tsx (refactored avec types centralisés)
 
 import { useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { createPost } from '../api/postsApi';
-
-type CreatePostFormProps = {
-  onPostCreated?: () => void;
-};
+import type { CreatePostData, CreatePostFormProps } from '../types';
 
 export default function CreatePostForm({ onPostCreated }: CreatePostFormProps) {
   const { token } = useAuth();
   const navigate = useNavigate();
 
-  const [title, setTitle] = useState('');
-  const [content, setContent] = useState('');
+  const [title, setTitle] = useState<CreatePostData['title']>('');
+  const [content, setContent] = useState<CreatePostData['content']>('');
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
 
-  const handleSubmit = async (e: { preventDefault: () => void; }) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError('');
     setSuccess('');
@@ -36,7 +33,7 @@ export default function CreatePostForm({ onPostCreated }: CreatePostFormProps) {
 
     } catch (err) {
       console.error(err);
-      setError("Erreur lors de la création de l'article.");
+      setError("Impossible de créer l'article. Vérifiez les champs ou votre connexion.");
     }
   };
 

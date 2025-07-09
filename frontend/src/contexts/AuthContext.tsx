@@ -1,18 +1,14 @@
-// ✅ src/contexts/AuthContext.tsx
-// ➔ Contexte d'authentification pour gérer le token et le username globalement
+// ✅ src/contexts/AuthContext.tsx (avec redirection dans logout)
 
 import { createContext, useContext, useState, type ReactNode } from "react";
-
-interface AuthContextType {
-  token: string | null;
-  username: string | null;
-  login: (token: string, username: string) => void;
-  logout: () => void;
-}
+import { useNavigate } from "react-router-dom";
+import { type AuthContextType } from "../types";
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
+  const navigate = useNavigate();
+
   const [token, setToken] = useState<string | null>(
     localStorage.getItem("token")
   );
@@ -28,10 +24,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const logout = () => {
-    setToken(null);
-    setUsername(null);
     localStorage.removeItem("token");
     localStorage.removeItem("username");
+    setToken(null);
+    setUsername(null);
+    navigate("/"); // ✅ Redirection ici fonctionnelle maintenant
   };
 
   return (
@@ -43,6 +40,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
 export const useAuth = () => {
   const context = useContext(AuthContext);
-  if (!context) throw new Error("useAuth must be used within AuthProvider");
+  if (!context) throw new Error("useAuth must be used within an AuthProvider");
   return context;
 };

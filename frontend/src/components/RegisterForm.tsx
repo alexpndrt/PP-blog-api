@@ -1,30 +1,30 @@
-// ✅ src/components/RegisterForm.tsx (refactored avec types)
+// ✅ src/components/RegisterForm.tsx (refactored avec types centralisés)
 
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { registerUser } from "../api/authApi";
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { registerUser } from '../api/authApi';
+import type { RegisterRequest } from '../types';
 
-interface RegisterFormProps {}
-
-export default function RegisterForm({}: RegisterFormProps) {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
+export default function RegisterForm() {
+  const [username, setUsername] = useState<RegisterRequest['username']>('');
+  const [password, setPassword] = useState<RegisterRequest['password']>('');
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
 
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setError("");
-    setSuccess("");
+    setError('');
+    setSuccess('');
 
     try {
       await registerUser({ username, password });
       setSuccess("Inscription réussie. Vous pouvez vous connecter.");
-      setUsername("");
-      setPassword("");
-      setTimeout(() => navigate("/login"), 1500);
+      setUsername('');
+      setPassword('');
+      setTimeout(() => navigate('/login'), 1500);
+
     } catch (err: any) {
       console.error(err);
       setError("Erreur lors de l'inscription. Veuillez réessayer.");
@@ -32,10 +32,7 @@ export default function RegisterForm({}: RegisterFormProps) {
   };
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="bg-white shadow rounded p-6 max-w-md mx-auto"
-    >
+    <form onSubmit={handleSubmit} className="bg-white shadow rounded p-6 max-w-md mx-auto">
       <h2 className="text-xl font-bold mb-4">Inscription</h2>
 
       {success && <p className="text-green-600 mb-3">{success}</p>}
@@ -63,10 +60,7 @@ export default function RegisterForm({}: RegisterFormProps) {
         />
       </div>
 
-      <button
-        type="submit"
-        className="bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded"
-      >
+      <button type="submit" className="bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded">
         S'inscrire
       </button>
     </form>
