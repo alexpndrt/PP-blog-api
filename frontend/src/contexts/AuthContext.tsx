@@ -1,13 +1,7 @@
 // ✅ src/contexts/AuthContext.tsx
 // ➔ Contexte d'authentification pour gérer le token et le username globalement
 
-import {
-  createContext,
-  useContext,
-  useEffect,
-  useState,
-  ReactNode,
-} from "react";
+import { createContext, useContext, useState, type ReactNode } from "react";
 
 interface AuthContextType {
   token: string | null;
